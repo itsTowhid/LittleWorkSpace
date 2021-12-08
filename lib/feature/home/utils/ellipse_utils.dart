@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -83,64 +82,48 @@ class EllipseUtils {
 
   static Path drawEllipsePath(
     Size size, {
-    Offset center = Offset.zero,
-    double rotation = pi / 4,
+    Offset position = Offset.zero,
+    double rotation = 0,
+    bool drawHalf = false,
+    bool isFrontHalf = true,
   }) {
     final w = size.width, h = size.height;
+    final p = Path();
 
-    Path p = Path()
-      ..moveTo(0, h / 2)
-      ..quadraticBezierTo(0, 0, w / 2, 0)
-      ..quadraticBezierTo(w, 0, w, h / 2)
-      ..quadraticBezierTo(w, h, w / 2, h)
-      ..quadraticBezierTo(0, h, 0, h / 2)
-      ..close();
+    if (drawHalf) {
+      if (isFrontHalf) {
+        p
+          ..moveTo(w / 2, 0)
+          ..quadraticBezierTo(w, 0, w, h / 2)
+          ..quadraticBezierTo(w, h, w / 2, h);
+      } else {
+        p
+          ..moveTo(w / 2, h)
+          ..quadraticBezierTo(0, h, 0, h / 2)
+          ..quadraticBezierTo(0, 0, w / 2, 0);
+      }
+    } else {
+      p
+        ..moveTo(0, h / 2)
+        ..quadraticBezierTo(0, 0, w / 2, 0)
+        ..quadraticBezierTo(w, 0, w, h / 2)
+        ..quadraticBezierTo(w, h, w / 2, h)
+        ..quadraticBezierTo(0, h, 0, h / 2)
+        ..close();
+    }
 
     final transMatrix = Matrix4.identity()
       ..rotateZ(rotation)
       ..translate(-w / 2, -h / 2);
-    p = p.transform(transMatrix.storage);
 
-    return p.shift(center);
+    return p.transform(transMatrix.storage).shift(position);
   }
 
-  static Path drawEllipseFrontHalf(
-    Size size, {
-    Offset center = Offset.zero,
-    double rotation = pi / 4,
-  }) {
-    final w = size.width, h = size.height;
-
-    Path p = Path()
-      ..moveTo(w / 2, 0)
-      ..quadraticBezierTo(w, 0, w, h / 2)
-      ..quadraticBezierTo(w, h, w / 2, h);
-
-    final transMatrix = Matrix4.identity()
-      ..rotateZ(rotation)
-      ..translate(-w / 2, -h / 2);
-    p = p.transform(transMatrix.storage);
-
-    return p.shift(center);
-  }
-
-  static Path drawEllipseBackHalf(
-    Size size, {
-    Offset center = Offset.zero,
-    double rotation = pi / 4,
-  }) {
-    final w = size.width, h = size.height;
-
-    Path p = Path()
-      ..moveTo(w / 2, h)
-      ..quadraticBezierTo(0, h, 0, h / 2)
-      ..quadraticBezierTo(0, 0, w / 2, 0);
-
-    final transMatrix = Matrix4.identity()
-      ..rotateZ(rotation)
-      ..translate(-w / 2, -h / 2);
-    p = p.transform(transMatrix.storage);
-
-    return p.shift(center);
+  static Offset pathPositionFromPercent(double percent, Path path) {
+    PathMetrics pathMetrics = path.computeMetrics();
+    PathMetric pathMetric = pathMetrics.elementAt(0);
+    percent = pathMetric.length * percent;
+    Tangent? pos = pathMetric.getTangentForOffset(percent);
+    return pos?.position ?? Offset.zero;
   }
 }
