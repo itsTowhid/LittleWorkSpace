@@ -27,5 +27,5 @@ jobs:
         with:
           args: deploy --only hosting:little-work-space
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LITTLE_WORK_SPACE }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./
