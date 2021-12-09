@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:little_work_space/shared/particle_system/orbit.dart';
 import 'package:little_work_space/shared/particle_system/particle_system.dart';
+import 'package:little_work_space/shared/resources/ext.dart';
 import 'package:little_work_space/shared/resources/random.dart';
 
 class OrbParticlesWidget extends StatefulWidget {
@@ -28,7 +29,6 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
     });
 
   final orbits = <Orbit>[];
-  final rand = Random();
 
   @override
   void initState() {
@@ -53,15 +53,9 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
     final center = size.center(Offset.zero);
     for (var i = 0; i < 5; i++) {
       orbits.add(Orbit(
-        orbitSize: Size(
-          size.width + rand.nextDouble() * 50 - 25,
-          size.height + rand.nextDouble() * 50 - 25,
-        ),
-        position: center.translate(
-          rand.nextDouble() * 50,
-          rand.nextDouble() * 50,
-        ),
-        rotation: -pi / (4 + rand.nextDouble() * 2),
+        orbitSize: size.enlargeRandom(25),
+        position: center.translateRandom(50),
+        rotation: -45.toDegree,
         pColors: [
           Colors.lightBlueAccent,
           Colors.lightGreenAccent,
@@ -86,10 +80,10 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
         // if (orbits.isEmpty) setup(size);
         // print('${constraints.maxWidth} X ${constraints.maxHeight} - ${size}');
         return CustomPaint(
-          painter: ParticlesPainter(
+          painter: ParticlePainter(
             onPaint: (canvas, _) => paintParticles(canvas, false),
           ),
-          foregroundPainter: ParticlesPainter(
+          foregroundPainter: ParticlePainter(
             onPaint: (canvas, _) => paintParticles(canvas, true),
           ),
           child: widget.child,
@@ -98,11 +92,15 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
     );
   }
 
-  void paintParticles(Canvas canvas, bool isFront) {
+  void paintParticles(Canvas canvas, bool isForeground) {
     for (final orbit in orbits) {
-      orbit
-        ..update({'isFront': isFront})
-        ..draw(canvas);
+      for (var particle in orbit.particles) {
+        final isFrontParticles = isForeground && (particle.life % 1) > .5;
+        final isBackParticles = !isForeground && (particle.life % 1) < .5;
+        if (isFrontParticles || isBackParticles) {
+          particle.draw(canvas);
+        }
+      }
     }
   }
 

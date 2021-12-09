@@ -37,15 +37,15 @@ class Orbit extends BaseParticle {
   @override
   void update([Map<String, dynamic> params = const {}]) {
     for (var particle in particles) {
-      particle.update({'orbit': orbit, 'isFront': params['isFront'] ?? true});
+      particle.update({'orbit': orbit});
     }
   }
 
-  @override
+/*  @override
   void draw(Canvas canvas) {
-    // canvas.drawPath(orbit, strokePaint);
+    canvas.drawPath(orbit, strokePaint);
     for (var particle in particles) {
       particle.draw(canvas);
     }
-  }
+  }*/
 }

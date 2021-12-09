@@ -25,13 +25,13 @@ abstract class BaseParticle {
   late final Paint paint = Paint()..style = PaintingStyle.fill,
       strokePaint = Paint()..style = PaintingStyle.stroke;
 
-  void update([Map<String, dynamic> params = const {}]);
+  void update([Map<String, dynamic> params = const {}]) {}
 
-  void draw(Canvas canvas);
+  void draw(Canvas canvas) {}
 }
 
-class ParticlesPainter extends CustomPainter {
-  ParticlesPainter({required this.onPaint});
+class ParticlePainter extends CustomPainter {
+  ParticlePainter({required this.onPaint});
 
   final void Function(Canvas canvas, Size size) onPaint;
 
@@ -39,5 +39,5 @@ class ParticlesPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) => onPaint.call(canvas, size);
 
   @override
-  bool shouldRepaint(_) => true;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

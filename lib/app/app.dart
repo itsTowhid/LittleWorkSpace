@@ -10,7 +10,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: R.appName,
       theme: ThemeData(fontFamily: 'Ubuntu', brightness: Brightness.dark),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }

@@ -33,12 +33,10 @@ class Particle extends BaseParticle {
       ..strokeWidth = .05;
   }
 
-  bool isFront = true;
   bool isLargeParticle = false;
 
   @override
   void update([Map params = const {}]) {
-    isFront = params['isFront'] as bool;
     final orbit = params['orbit'] as Path;
     life += isLargeParticle ? .00005 : .001;
     final sinY = sin(life * 9) * 100;
@@ -56,14 +54,6 @@ class Particle extends BaseParticle {
 
   @override
   void draw(Canvas canvas) {
-    final isFrontParticles = isFront && (life % 1) > .5;
-    final isBackParticles = !isFront && (life % 1) < .5;
-
-    if (isFrontParticles || isBackParticles || isLargeParticle) {
-      shape.draw(canvas, paint, size, position);
-      if (isLargeParticle) {
-        // shape.draw(canvas, strokePaint, Size.square(radius), position);
-      }
-    }
+    shape.draw(canvas, paint, size, position);
   }
 }
