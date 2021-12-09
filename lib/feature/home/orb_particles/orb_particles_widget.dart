@@ -15,7 +15,7 @@ class OrbParticlesWidget extends StatefulWidget {
 }
 
 class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late final _controller = AnimationController(
     duration: const Duration(minutes: 10),
     vsync: this,
@@ -77,6 +77,8 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         // final size = MediaQuery.of(context).size;
@@ -98,4 +100,7 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
       orbit.drawParticles(canvas, isFront);
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
