@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:little_work_space/feature/home/orb_particles/orbit.dart';
-import 'package:little_work_space/feature/home/orb_particles/particles_painter.dart';
+import 'package:little_work_space/feature/home/orb_particles/painter.dart';
+import 'package:little_work_space/shared/resources/random.dart';
 
 class OrbParticlesWidget extends StatefulWidget {
   const OrbParticlesWidget({this.child, Key? key}) : super(key: key);
@@ -64,9 +65,12 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
         particleColors: [
           Colors.lightBlueAccent,
           Colors.lightGreenAccent,
+          Colors.amberAccent,
           Colors.pinkAccent,
           Colors.white,
         ],
+        particlesCount: globalRandom.nextInt(i == 0 ? 7 : 25),
+        isBackgroundParticle: i == 0,
       ));
     }
   }
