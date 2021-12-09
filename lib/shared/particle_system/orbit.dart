@@ -16,6 +16,7 @@ class Orbit extends BaseParticle {
     int pMinSize = 1,
     double pRandomRange = 1,
     List<Color> pColors = const [Colors.white],
+    ParticleShape shape = ParticleShape.circle,
   })  : orbit = EllipseUtils.drawEllipsePath(
           orbitSize,
           position: position,
@@ -26,7 +27,7 @@ class Orbit extends BaseParticle {
           (_) => Particle(
             globalRandom.nextDouble() * pRandomRange + pMinSize,
             color: pColors.pickRandom!,
-            shape: pMinSize > 99 ? ParticleShape.circle : ParticleShape.square,
+            shape: shape,
           ),
         ),
         super(size: orbitSize, rotation: rotation, position: position);
@@ -41,11 +42,11 @@ class Orbit extends BaseParticle {
     }
   }
 
-/*  @override
+  @override
   void draw(Canvas canvas) {
-    canvas.drawPath(orbit, strokePaint);
+    // canvas.drawPath(orbit, strokePaint);
     for (var particle in particles) {
       particle.draw(canvas);
     }
-  }*/
+  }
 }

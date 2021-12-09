@@ -29,7 +29,12 @@ extension ParticleShapeExt on ParticleShape {
         );
         break;
       case ParticleShape.triangle:
-        // TODO: Handle this case.
+        final path = Path()
+          ..moveTo(position.dx, position.dy)
+          ..relativeLineTo(size.width / 2, size.height)
+          ..relativeLineTo(-size.width, 0)
+          ..close();
+        canvas.drawPath(path, paint);
         break;
       case ParticleShape.polygon:
         // TODO: Handle this case.

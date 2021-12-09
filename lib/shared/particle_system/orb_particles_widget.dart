@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:little_work_space/shared/particle_system/constants.dart';
 import 'package:little_work_space/shared/particle_system/orbit.dart';
 import 'package:little_work_space/shared/particle_system/particle_system.dart';
 import 'package:little_work_space/shared/resources/ext.dart';
@@ -22,13 +21,20 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
     vsync: this,
   )..addListener(() {
       setState(() {
-        for (final orbit in orbits) {
-          orbit.update();
+        for (final orb in [bgOrbit, circleOrbit, squareOrbit]) {
+          orb?.update();
         }
       });
     });
 
-  final orbits = <Orbit>[];
+  Orbit? bgOrbit, circleOrbit, squareOrbit;
+  final colors = [
+    Colors.lightBlueAccent,
+    Colors.lightGreenAccent,
+    Colors.amberAccent,
+    Colors.pinkAccent,
+    Colors.white,
+  ];
 
   @override
   void initState() {
@@ -50,25 +56,30 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
   }
 
   void _generateParticles(Size size) {
-    final center = size.center(Offset.zero);
-    for (var i = 0; i < 5; i++) {
-      orbits.add(Orbit(
-        orbitSize: size.enlargeRandom(25),
-        position: center.translateRandom(50),
-        rotation: -45.toDegree,
-        pColors: [
-          Colors.lightBlueAccent,
-          Colors.lightGreenAccent,
-          Colors.amberAccent,
-          Colors.pinkAccent,
-          Colors.white,
-        ],
-        pCount: globalRandom.nextInt(i == 0 ? 7 : 25),
-        pMinSize: i == 0 ? 100 : 1,
-        pRandomRange: i == 0 ? 200 : 4,
-      ));
-    }
+    circleOrbit = _buildOrbit(size, ParticleShape.circle);
+    squareOrbit = _buildOrbit(size, ParticleShape.square);
+
+    bgOrbit = Orbit(
+      orbitSize: size.enlargeRandom(25),
+      position: size.center(Offset.zero).translateRandom(50),
+      rotation: (-45 + globalRandom.nextInt(20)).degreeToRadian,
+      pColors: colors,
+      pCount: globalRandom.nextInt(7),
+      pRandomRange: 200,
+      pMinSize: 100,
+    );
   }
+
+  Orbit _buildOrbit(Size size, ParticleShape shape) => Orbit(
+        orbitSize: size.enlargeRandom(25),
+        position: size.center(Offset.zero).translateRandom(50),
+        rotation: (-45 + globalRandom.nextInt(20)).degreeToRadian,
+        pColors: colors,
+        shape: shape,
+        pCount: globalRandom.nextInt(30),
+        pRandomRange: 4,
+        pMinSize: 2,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +104,11 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
   }
 
   void paintParticles(Canvas canvas, bool isForeground) {
-    for (final orbit in orbits) {
-      for (var particle in orbit.particles) {
+    if (!isForeground) {
+      bgOrbit?.draw(canvas);
+    }
+    for (final orbit in [circleOrbit, squareOrbit]) {
+      for (var particle in orbit?.particles ?? []) {
         final isFrontParticles = isForeground && (particle.life % 1) > .5;
         final isBackParticles = !isForeground && (particle.life % 1) < .5;
         if (isFrontParticles || isBackParticles) {
