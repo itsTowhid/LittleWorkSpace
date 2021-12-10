@@ -40,8 +40,7 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
   void initState() {
     super.initState();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
-      final size = _getWidgetSize();
-      if (size != null) setup(size);
+      _getWidgetSize()?.let(setup);
     });
   }
 
@@ -68,6 +67,8 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
       pRandomRange: 200,
       pMinSize: 100,
     );
+
+    print('${bgOrbit?.particles.length}, ${circleOrbit?.particles.length}, ${squareOrbit?.particles.length}');
   }
 
   Orbit _buildOrbit(Size size, ParticleShape shape) => Orbit(
@@ -76,7 +77,7 @@ class _OrbParticlesWidgetState extends State<OrbParticlesWidget>
         rotation: (-45 + globalRandom.nextInt(20)).degreeToRadian,
         pColors: colors,
         shape: shape,
-        pCount: globalRandom.nextInt(30),
+        pCount: globalRandom.nextInt(15) + 10,
         pRandomRange: 4,
         pMinSize: 2,
       );

@@ -26,3 +26,7 @@ extension SizeExt on Size {
 extension ListExt<T> on List<T> {
   T? get pickRandom => isNotEmpty ? this[globalRandom.nextInt(length)] : null;
 }
+
+extension ObjectExt<T> on T {
+  R let<R>(R Function(T it) op) => op(this);
+}
